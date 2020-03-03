@@ -4,14 +4,23 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      matrix:
+        config:
+        - {os: "ubuntu-latest", url: "https://github.com/casey/just/releases/download/v0.5.8/just-v0.5.8-x86_64-unknown-linux-musl.tar.gz", name: "just", pathInArchive: "just" }
+        - {os: "windows-latest", url: "https://github.com/casey/just/releases/download/v0.5.8/just-v0.5.8-x86_64-pc-windows-msvc.zip", name: "just.exe", pathInArchive: "just.exe" }
 
     steps:
+      - uses: engineerd/configurator@v0.0.1
+        with:
+          name: ${{ matrix.config.name }}
+          url: ${{ matrix.config.url }}
+          pathInArchive: ${{ matrix.config.pathInArchive }}
+
       - uses: actions/checkout@v1
       - name: Build
         run: |
           cargo fmt --all -- --check
-          wget https://github.com/casey/just/releases/download/v0.5.8/just-v0.5.8-x86_64-unknown-linux-musl.tar.gz
-          tar -xzf just-v0.5.8-x86_64-unknown-linux-musl.tar.gz -C /tmp
-          /tmp/just build
-          /tmp/just test
+          just build
+          just test
