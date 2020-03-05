@@ -39,3 +39,10 @@ _cleanup_kube:
 
 testfor:
     for i in 1 2 3 4 5; do sleep 3 && echo hello $i; done
+
+
+# Build the Go libwasm2oci library
+bootstrap:
+    cd libwasm2oci
+    GO111MODULE=on CGO_ENABLED=1 go build -buildmode=c-archive -o target/libwasm2oci.a libwasm2oci/libwasm2oci.go
+    bindgen -o src/oci.rs target/libwasm2oci.h --raw-line "#![allow(non_snake_case, non_camel_case_types, non_upper_case_globals)]"
