@@ -20,13 +20,13 @@ jobs:
           name: ${{ matrix.config.name }}
           url: ${{ matrix.config.url }}
           pathInArchive: ${{ matrix.config.pathInArchive }}
-      - name: Build
-        if: matrix.config.os == "windows-latest"
-            run: |
-              set OPENSSL_DIR=C:\OpenSSL-Win64
-              set PATH=%PATH%;C:\OpenSSL-Win64\bin
-              vcpkg install openssl:x64-windows
-              set VCPKG_ROOT=c:\path\to\vcpkg\installation
+      - name: Build  
+        if: matrix.config.os == 'windows-latest'
+        run: |
+          set OPENSSL_DIR=C:\OpenSSL-Win64
+          set PATH=%PATH%;C:\OpenSSL-Win64\bin
+          vcpkg install openssl:x64-windows
+          set VCPKG_ROOT=c:\path\to\vcpkg\installation
 
         run: |
           just build
